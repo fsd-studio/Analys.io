@@ -1,44 +1,16 @@
-'use client'
+"use client"
 
 import Head from "next/head";
-import { useEffect, useState } from "react";
-import { useTranslation } from 'react-i18next';
-import { productService } from '../services/api';
-import Gallery from './components/sections/Gallery';
-import Nav from './components/sections/Nav';
-import ContactForm from "./components/sections/contact/ContactForm";
-import Footer from './components/sections/footer/Footer';
-import HeroTextImage from './components/sections/hero/HeroTextImage';
-import MenuElegant from "./components/sections/menu/MenuElegant";
-import ReserveButton from "./components/ui/ReserveButton";
-
-import '../../i18n';
-
-import ChangeHours from "./cms/changeHours";
-import ChangeMenu from "./cms/changeMenu";
+import Conversation from "./components/components/Conversation";
+import Grid from "./components/components/Grid";
 
 
 export default function Home() {
-  const [restaurantData, setRestaurantData] = useState(null);
-  const { t, i18n } = useTranslation();
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await productService.getAllRestaurants();
-        setRestaurantData(response.data);
-        console.log(response.data[0].name);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchProducts();
-  }, []);
 
   return (
     <>
       <Head>
-        <title>title</title>
+        <title>Veh Kristina</title>
         <meta name="description" content="Write a short but effective description related to this page" />
 
         {/* meta data for link sharing */}
@@ -64,30 +36,53 @@ export default function Home() {
       </Head>
 
       <div>
-        {/* {restaurantData && <p>{restaurantData[0].name}</p>}  */}
         {/* <Nav></Nav> */}
 
-        <ChangeMenu />
-        <ChangeHours />
+        {/* <HeroTextImage
+          title="Dr Somogyi Krisztina"
+        ></HeroTextImage>
 
-        {/* <Menu></Menu> */}
-        <MenuElegant />  
+        <ContactForm></ContactForm> */}
 
-        {/* Language implementation example 
         
-            Here I define a namespace for each item, if I didn't it would try to take it from common.json
-        */}
-        <Nav links={ [t("about", { ns: "nav" }), t("menu", { ns: "nav" }), t("gallery", { ns: "nav" }), t("contact", { ns: "nav" })] }></Nav>
+        <div className="bg-gray-100 flex flex-col h-screen py-12 px-4 overflow-hidden">
+          <div className="lg:max-w-[1400px] w-full mx-auto flex flex-col h-full">
 
-        <HeroTextImage></HeroTextImage>
+            {/* Header */}
+            <div className="flex items-center pb-6 justify-between">
+              <h2 className="font-primary text-5xl">Analys.io</h2>
+              <div className="h-full border border-green-600 bg-green-100 aspect-square rounded-full"></div>
+            </div>
 
-        <ContactForm></ContactForm>
+            {/* Grid container that fills remaining space */}
+            <div className="grid grid-cols-7 gap-8 flex-grow min-h-0">
 
-        <Gallery></Gallery>
+              {/* Conversation */}
+              <div className="col-span-2 border-3 rounded-4xl border-green-600 bg-green-50 flex flex-col p-3 h-full min-h-0">
+                <Conversation conversation={[
+                  { children: "alalalallal",
+                    primary: true },
+                  { children: "alalalallal",
+                    primary: false },
+
+                  ]}></Conversation>
+              </div>
+
+              {/* Diagram grid */}
+              <div className="col-span-5 border-3 rounded-4xl overflow-y-hidden border-green-600 flex flex-1 h-full">
+                <Grid></Grid>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+        {/* <Gallery></Gallery>
 
         <Footer></Footer>
 
-        <ReserveButton></ReserveButton>
+        <ReserveButton></ReserveButton> */}
       </div>
     </>
   );
