@@ -40,8 +40,6 @@ function UploadZone() {
       setFileStatus("File must be a .json");
       setLoading(false);
       return;
-
-      
     }
   }
 

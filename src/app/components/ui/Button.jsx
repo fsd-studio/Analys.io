@@ -13,14 +13,14 @@ const Button = ({
   
   // Solid variant styles
   const variants = {
-    primary: 'bg-primary hover:bg-primary/90 text-white focus:ring-primary',
+    primary: 'bg-primary hover:bg-primary/90 text-white',
     secondary: 'bg-secondary hover:bg-secondary/90 text-black focus:ring-secondary',
     danger: 'bg-red-600 hover:bg-red-700 text-white focus:ring-red-500'
   }
   
   // Outline variant styles
   const outlineVariants = {
-    primary: 'border-2 border-primary text-primary hover:bg-primary-50 focus:ring-primary-500 bg-transparent',
+    primary: 'border-2 border-green-800 text-green-800 hover:bg-green-50 bg-transparent',
     secondary: 'border-2 border-secondary text-secondary hover:bg-secondary focus:ring-secondary bg-transparent',
     danger: 'border-2 border-red-600 text-red-600 hover:bg-red-50 focus:ring-red-500 bg-transparent'
   }

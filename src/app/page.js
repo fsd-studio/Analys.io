@@ -2,10 +2,9 @@
 
 import Head from "next/head";
 import { Nav } from "./components";
-import Conversation from "./components/components/Conversation";
+import Conversation from "./components/components/conversation/Conversation";
 import Grid from "./components/components/Grid";
 import DashboardSection from "./components/ui/DashboardSection";
-
 
 export default function Home() {
 
@@ -39,7 +38,7 @@ export default function Home() {
 
       <DashboardSection>
 
-        <Nav></Nav>
+        <Nav links={["Conversations"]} />
 
         
 
