@@ -2,6 +2,7 @@
 
 import { motion } from 'motion/react';
 import { useState } from 'react';
+import { FaUserGraduate } from "react-icons/fa6";
 import HamburgerMenu from '../ui/HamburgerMenu.jsx';
 
 const Nav = ({ 
@@ -34,7 +35,9 @@ const Nav = ({
             ))}
           </div>
 
-          <div className="h-12 border hidden md:block border-green-600 bg-green-100 aspect-square rounded-full"></div>
+          <div className="h-12 border hidden md:flex items-center justify-center border-green-600 bg-green-100 aspect-square rounded-full">
+            <FaUserGraduate className='text-green-800 w-6  h-auto' />
+          </div>
         </div>
 
 
