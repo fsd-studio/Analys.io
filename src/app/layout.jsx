@@ -1,3 +1,4 @@
+import { ChatProvider } from "context/ChatContext";
 import { Geist, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 
@@ -19,6 +20,12 @@ const fontPrimary = localFont({
   display: "swap",
 });
 
+const fontPrimaryLight = localFont({
+  src: "./fonts/DOl.otf", 
+  variable: "--font-primary-light",
+  display: "swap",
+});
+
 
 export const metadata = {
   title: "fsd template", 
@@ -29,9 +36,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${fontPrimary.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${fontPrimary.variable} ${fontPrimaryLight.variable} antialiased`}
       >
-        {children}
+        <ChatProvider>
+          {children}
+        </ChatProvider>
       </body>
     </html>
   );
