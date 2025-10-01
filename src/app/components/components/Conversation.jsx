@@ -1,20 +1,28 @@
+import { useChat } from "context/ChatContext";
+import ResizableWindow from "../ui/ResizableWindow";
 import Message from "./Message";
+import UploadZone from "./UploadZone";
 
-function Conversation({
-    conversation,
-}) {
+function Conversation({ conversation }) {
+
+  const { chatMessages } = useChat();
+
   return (
-    <>
-        <div className="flex-grow overflow-y-auto min-h-0 gap-3 flex flex-col">
-            {/* Messages */}
-            {conversation ? conversation.map((c, index) => (
-                <div key={index}>
-
-                    <Message primary={c.primary}></Message>
-                </div>
-            )) : <div>Get started!</div>}
-        </div>
-    </>
+      <ResizableWindow>
+          <div className="flex-grow scroll-auto !overflow-y-scroll h-0 gap-3 w-full flex flex-col">
+              {chatMessages?.length > 0 ? (
+              chatMessages.map((c, index) => (
+                  <div key={index} className="w-full">
+                    <Message primary={c.primary}>
+                      {c.children}
+                    </Message>
+                  </div>
+              ))
+              ) : (
+              <UploadZone></UploadZone>
+              )}
+          </div>
+      </ResizableWindow>
   );
 }
 

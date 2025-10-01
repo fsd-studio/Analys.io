@@ -1,8 +1,10 @@
 "use client"
 
 import Head from "next/head";
+import { Nav } from "./components";
 import Conversation from "./components/components/Conversation";
 import Grid from "./components/components/Grid";
+import DashboardSection from "./components/ui/DashboardSection";
 
 
 export default function Home() {
@@ -35,55 +37,26 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
-      <div>
-        {/* <Nav></Nav> */}
+      <DashboardSection>
 
-        {/* <HeroTextImage
-          title="Dr Somogyi Krisztina"
-        ></HeroTextImage>
-
-        <ContactForm></ContactForm> */}
+        <Nav></Nav>
 
         
-        <div className="bg-gray-100 flex flex-col h-screen py-12 px-4 overflow-hidden">
-          <div className="lg:max-w-[1400px] w-full mx-auto flex flex-col h-full">
 
-            {/* Header */}
-            <div className="flex items-center pb-6 justify-between">
-              <h2 className="font-primary text-5xl">Analys.io</h2>
-              <div className="h-full border border-green-600 bg-green-100 aspect-square rounded-full"></div>
-            </div>
+        {/* Grid container that fills remaining space */}
+        <div className="grid lg:grid-cols-7 lg:gap-6 flex-grow min-h-0 max-h-full relative">
 
-            {/* Grid container that fills remaining space */}
-            <div className="grid grid-cols-7 gap-8 flex-grow min-h-0">
+          {/* Conversation */}
+          <div className="order-1 lg:col-span-2">
+            <Conversation></Conversation>
+          </div>
 
-              {/* Conversation */}
-              <div className="col-span-2 border-3 rounded-4xl border-green-600 bg-green-50 flex flex-col p-3 h-full min-h-0">
-                <Conversation conversation={[
-                  { children: "alalalallal",
-                    primary: true },
-                  { children: "alalalallal",
-                    primary: false },
-
-                  ]}></Conversation>
-              </div>
-
-              {/* Diagram grid */}
-              <div className="col-span-5 border-3 rounded-4xl overflow-y-hidden border-green-600 flex flex-1 h-full">
-                <Grid></Grid>
-              </div>
-            </div>
+          {/* Diagram grid */}
+          <div className="lg:col-span-5 border-[2px] lg:order-2 rounded-3xl overflow-y-hidden border-black flex">
+            <Grid></Grid>
           </div>
         </div>
-
-
-
-        {/* <Gallery></Gallery>
-
-        <Footer></Footer>
-
-        <ReserveButton></ReserveButton> */}
-      </div>
+      </DashboardSection>        
     </>
   );
 }

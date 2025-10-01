@@ -9,6 +9,14 @@
   overflow: hidden;
 }
 
+.user-select-none {
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none;    /* Firefox */
+  -ms-user-select: none;     /* IE/Edge */
+}
+
+
 
 @theme {
   --color-primary: #15317E;
@@ -21,6 +29,7 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-primary: var(--font-primary);
+  --font-primary-light: var(--font-primary-light);
 }
 
 @media (prefers-color-scheme: dark) {

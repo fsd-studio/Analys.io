@@ -3,7 +3,6 @@
 import { motion } from 'motion/react';
 import { useState } from 'react';
 import HamburgerMenu from '../ui/HamburgerMenu.jsx';
-import Section from '../ui/Section.jsx';
 
 const Nav = ({ 
   children, 
@@ -15,35 +14,35 @@ const Nav = ({
   const [mobileOpen, setMobileOpen] = useState(false)
   
   return (
-    <div className={`overflow-hidden ${mobileOpen && "no-doc-scroll"}`}>
+    <div className={`mb-6 ${mobileOpen && "no-doc-scroll"}`}>
       
       {/* navigation bar */}
-      <div className='left-0 fixed w-full z-50 top-0 '>
-        <nav>
-          <Section outerC="!py-0">
-            <div className='flex items-center h-20 md:h-28 lg:h-26 justify-between w-full'>
-              {/* Logo */}
-              <a href="/">
-                <img src={logo} className='h-10 md:h-[60px] w-auto' alt="logo" />
-              </a>
-              {children}
+      <div className='flex items-center justify-between flex-1 mb-0'>
 
-              {/* Large screen navigation */}
-              <div className='hidden lg:flex gap-6'>
-                {links.map((title, index) => (
-                  <a key={index} className='text-primary text-2xl font-light font-serif' href={`/#${title}`}>{title}</a>
-                ))}
-              </div>
+        {/* Logo */}
+        <a href="/">
+          <h1 className="font-primary text-4xl md:text-5xl">Analys.io</h1>
+        </a>
 
-              {/* Mobile menu button */}
-              <div className='lg:hidden flex items-center'>
-                <HamburgerMenu onClick={() => setMobileOpen(!mobileOpen)} isOpen={mobileOpen} />
-                {/* <Button className='!bg-opacity-0 md:hidden' size="md" onClick={() => setMobileOpen(!mobileOpen)} variant='primary'>open</Button> */}
-                {/* <Button className='!bg-opacity-0 hidden ?:block' size="lg" onClick={() => setMobileOpen(!mobileOpen)} variant='primary'>open</Button> */}
-              </div>
-            </div>
-          </Section>
-        </nav>
+        {children}
+
+        <div className='flex items-center gap-8'>
+          {/* Large screen navigation */}
+          <div className='hidden lg:flex gap-6'>
+            {links.map((title, index) => (
+              <a key={index} className='text-black text-3xl font-primary-light uppercase' href={`/#${title}`}>{title}</a>
+            ))}
+          </div>
+
+          <div className="h-12 border hidden md:block border-green-600 bg-green-100 aspect-square rounded-full"></div>
+        </div>
+
+
+
+        {/* Mobile menu button */}
+        <div className='lg:hidden flex items-center relative z-50'>
+          <HamburgerMenu onClick={() => setMobileOpen(!mobileOpen)} isOpen={mobileOpen} />
+        </div>
       </div>
 
       {/* Expanded mobile menu */}
@@ -70,7 +69,7 @@ const Nav = ({
             },
           },
         }}
-        className={`lg:hidden bg-primary origin-top fixed z-40 top-0 left-0 h-screen w-full overflow-hidden`}>
+        className={`lg:hidden bg-green-100 origin-top fixed z-40 top-0 left-0 h-screen w-full overflow-hidden`}>
           <div className='flex flex-col justify-center items-center h-full'>
             {links.map((title, index) => (
               <div key={index} className='overflow-hidden'>
@@ -83,11 +82,12 @@ const Nav = ({
                   }
                 }} 
       
-                className='text-secondary text-3xl text-center font-serif w-full block mt-6' href={`/#${title}`}>{title}</motion.a>
+                className='text-black text-3xl font-primary-light uppercase w-full block mt-6' href={`/#${title}`}>{title}</motion.a>
               </div>
             ))}
           </div>
       </motion.nav>
+
     </div>
 
   )
