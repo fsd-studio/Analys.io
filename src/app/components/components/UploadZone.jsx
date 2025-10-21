@@ -56,7 +56,9 @@ function UploadZone() {
               htmlFor="file-upload"
               className="cursor-pointer border border-dashed border-green-700 rounded-2xl flex items-center justify-center p-4 hover:bg-green-50 transition"
             >
-              
+              {
+                
+              }
               {loading ? (
                 <div className="animate-spin rounded-full border-dashed h-10 w-10 border-b-3 border-green-800"></div>
               ) : (

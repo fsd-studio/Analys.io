@@ -4,9 +4,9 @@ import Message from "../Message";
 import UploadZone from "../UploadZone";
 import Settings from "./Settings";
 
-function Conversation({ conversation }) {
+function Conversation() {
 
-  const { chatMessages, setChatMessages } = useChat();
+  const { chatMessages } = useChat();
 
   return (
       <ResizableWindow>
