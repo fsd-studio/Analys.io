@@ -3,7 +3,7 @@
 import { motion } from 'motion/react';
 import { useState } from 'react';
 import { FaUserGraduate } from "react-icons/fa6";
-import HamburgerMenu from '../ui/HamburgerMenu.jsx';
+import HamburgerMenu from 'app/components/ui/basic/HamburgerMenu';
 
 const Nav = ({ 
   children, 

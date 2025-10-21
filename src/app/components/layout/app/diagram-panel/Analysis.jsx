@@ -1,8 +1,8 @@
 import { geminiAnalysis } from "app/api/ai/geminiAPI";
 import { useChat } from "context/ChatContext";
 import { useEffect, useState } from "react";
-import { Button } from "..";
-import Tooltip from "./Tooltip";
+import Button from "../../../ui/basic/Button";
+import Tooltip from "../../../ui/basic/Tooltip";
 
 function Analysis({
 
@@ -36,8 +36,6 @@ function Analysis({
         setResponse(null);
         setLoading(false);
         setError(null)
-
-
     }, [chatMessages]);
 
 

@@ -1,10 +1,10 @@
 "use client"
 
 import Head from "next/head";
-import { Nav } from "./components";
-import Conversation from "./components/components/conversation/Conversation";
-import Grid from "./components/components/Grid";
-import DashboardSection from "./components/ui/DashboardSection";
+import DashboardSection from "./components/ui/basic/DashboardSection";
+import Nav from "./components/layout/nav/Nav";
+import Conversation from "./components/layout/app/conversation-panel/Conversation";
+import Grid from "./components/layout/app/diagram-panel/Grid";
 
 export default function Home() {
 

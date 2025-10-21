@@ -1,8 +1,8 @@
+import ResizableWindow from "app/components/ui/conversation/ResizableWindow";
 import { useChat } from "context/ChatContext";
-import ResizableWindow from "../../ui/ResizableWindow";
-import Message from "../Message";
-import UploadZone from "../UploadZone";
 import Settings from "./Settings";
+import UploadZone from "./UploadZone";
+import Message from "app/components/ui/conversation/Message";
 
 function Conversation() {
 
