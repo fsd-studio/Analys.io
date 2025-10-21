@@ -11,7 +11,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Veh Kristina</title>
+        <title>Analys.io</title>
         <meta name="description" content="Write a short but effective description related to this page" />
 
         {/* meta data for link sharing */}
