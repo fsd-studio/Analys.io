@@ -23,7 +23,7 @@ const Grid = ({
     },
     {
       id: 'n2',
-      position: { x: 100, y: 100 },
+      position: { x: 100, y: 400 },
       type: "argument",
       data: { label: "Everything we do is based on what we want, but we don't decide what we want.", person: "secondary"},
     },

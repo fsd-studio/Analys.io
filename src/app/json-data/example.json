@@ -5,18 +5,19 @@
             {
                 "id": 1,
                 "label": "Free will does not exist.",
-                "children": [2, 3],
+                "children": [2],
                 "type": ["premise"]
             },
             {
                 "id": 2,
                 "label": "Everything we do is based on what we want, but we don't decide what we want.",
-                "children": ["argument"]
+                "children": [3],
+                "type": ["argument"]
             },
             {
-                "id": 2,
+                "id": 3,
                 "label": "Everything we do is based on what we want, and we do decide what we want.",
-                "children": ["counterargument"]
+                "type": ["counterargument"]
             }
         ]
     }
