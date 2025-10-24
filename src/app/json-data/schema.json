@@ -25,3 +25,15 @@
     },
     "required": ["flowchart"]
 }
+
+list = ["jimi", 1, 2, 3, "sen"]
+list[0]
+
+object = {
+    "names": ["jimi, sen"],
+    "hours": [1,2,3]
+}
+
+{
+    flowchart:
+}
