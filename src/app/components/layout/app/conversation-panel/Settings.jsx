@@ -1,3 +1,5 @@
+"use client"
+
 import { useChat } from "context/ChatContext";
 import { useState } from "react";
 import { MdDeleteForever } from "react-icons/md";
@@ -6,7 +8,7 @@ function Settings({
 
 }) {
     const [open, setOpen] = useState(false);
-    const { chatMessages, setChatMessages } = useChat();
+    const { chatMessages, setChatMessages, setNodes, setEdges, setActiveID } = useChat();
 
     const toggleOpen = () => {
         setOpen(!open);
@@ -14,12 +16,15 @@ function Settings({
 
     const handleDeleteConversation = () => {
         setChatMessages([]);
+        setNodes([]);
+        setEdges([]);
+        setActiveID(null);
         setOpen(false);
     }
 
     return (
         <>
-            <div className="absolute top-3 z-10">
+            <div className="absolute top-3 left-3 z-10">
                 <div onClick={toggleOpen} className="cursor-pointer flex gap-1 border border-green-700 w-fit bg-green-100 items-center p-2 rounded-full">
                     <div className="w-1 h-1 bg-green-700 rounded-full"/>
                     <div className="w-1 h-1 bg-green-700 rounded-full"/>

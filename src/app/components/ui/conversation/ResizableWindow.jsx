@@ -1,3 +1,5 @@
+"use client"
+
 import { useEffect, useRef, useState } from "react";
 
 export default function ResizableWindow({ 
@@ -51,7 +53,7 @@ export default function ResizableWindow({
         className="relative border-2 border-green-600 rounded-3xl bg-green-50 lg:!h-full !w-full overflow-hidden"
         style={{ width: size.width, height: size.height}}
       >
-        <div className="p-3 h-full w-full flex flex-col mt-3 lg:mt-0">{children}</div>
+        <div className="h-full w-full flex flex-col mt-3 lg:mt-0">{children}</div>
 
         {/* Resize handle */}
         <div

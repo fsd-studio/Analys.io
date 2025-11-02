@@ -1,13 +1,12 @@
-"use client"
-
 import Head from "next/head";
 import DashboardSection from "./components/ui/basic/DashboardSection";
 import Nav from "./components/layout/nav/Nav";
 import Conversation from "./components/layout/app/conversation-panel/Conversation";
 import Grid from "./components/layout/app/diagram-panel/Grid";
+import Analysis from "./components/layout/app/diagram-panel/Analysis";
+import DiagramPanel from "./components/layout/app/diagram-panel/DiagramPanel";
 
 export default function Home() {
-
   return (
     <>
       <Head>
@@ -51,8 +50,8 @@ export default function Home() {
           </div>
 
           {/* Diagram grid */}
-          <div className="lg:col-span-5 border-[2px] lg:order-2 rounded-3xl overflow-y-hidden border-black flex">
-            <Grid></Grid>
+          <div className="lg:col-span-5 border-[2px] justify-center lg:order-2 rounded-3xl overflow-y-hidden border-black flex">
+            <DiagramPanel></DiagramPanel>
           </div>
         </div>
       </DashboardSection>        

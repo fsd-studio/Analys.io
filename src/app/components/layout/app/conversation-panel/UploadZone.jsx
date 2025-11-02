@@ -1,3 +1,5 @@
+"use client"
+
 import { useChat } from 'context/ChatContext';
 import { useState } from 'react';
 import { BsUpload } from 'react-icons/bs';
