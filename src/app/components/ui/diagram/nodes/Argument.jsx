@@ -1,8 +1,17 @@
+"use client";
+
 import { Handle, Position } from "@xyflow/react";
+import { useChat } from "context/ChatContext";
 
 function Argument({ 
-        data
+        data,
+        id
     }) {
+
+    const { setActiveID, activeID } = useChat();
+    console.log("Active ID in Argument:", activeID);
+    console.log("ID in Argument:", id);
+
 
     const styles = {
         primary: "border-blue-700 bg-blue-100",
@@ -16,7 +25,7 @@ function Argument({
 
     return (
         <>
-            <div className={`${styles[data.person]} w-60 p-3 text-center flex items-center justify-center border rounded-xl`}>
+            <div onClick={() => setActiveID(id)} className={`${styles[data.person]} ${activeID === id ? "ring-2 ring-blue-500" : ""} w-60 p-3 text-center flex items-center justify-center border rounded-xl`}>
                 <h2 className={`${titleStyles[data.person]} text-sm font-primary font-semibold`}>{data.label}</h2>
                 <Handle type="source" position={Position.Bottom} />
                 <Handle type="target" position={Position.Top} />
