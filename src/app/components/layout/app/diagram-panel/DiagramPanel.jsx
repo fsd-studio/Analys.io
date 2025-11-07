@@ -1,21 +1,20 @@
+// DiagramPanel.js
+
 "use client"
 
 import '@xyflow/react/dist/style.css';
-import Analysis from "./Analysis";
-import Grid from './Grid';
-import { useChat } from 'context/ChatContext';
+import DiagramTabs from './DiagramTabs';
+
+// 1. ✅ Import the necessary provider
+import { ReactFlowProvider } from '@xyflow/react'; 
 
 const DiagramPanel = () => {
-    const {nodes, edges} = useChat();
-
     return (
-        <div className="p-3 w-full h-full flex flex-col gap-3 items-center justify-center">
-            {
-                nodes.length === 0 ? (
-                    <Analysis></Analysis>
-                ) : (
-                    <Grid></Grid>
-                )}
+        <div className="w-full h-full flex flex-col gap-3 items-center justify-center">
+            {/* 2. 🧱 Wrap DiagramTabs (and thus Grid) in the provider */}
+            <ReactFlowProvider> 
+                <DiagramTabs /> 
+            </ReactFlowProvider>
         </div>
     );
 };

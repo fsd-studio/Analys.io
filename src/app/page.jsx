@@ -1,10 +1,17 @@
+// Home.js
+
 import Head from "next/head";
 import DashboardSection from "./components/ui/basic/DashboardSection";
 import Nav from "./components/layout/nav/Nav";
 import Conversation from "./components/layout/app/conversation-panel/Conversation";
-import Grid from "./components/layout/app/diagram-panel/Grid";
-import Analysis from "./components/layout/app/diagram-panel/Analysis";
+// ❌ REMOVE the following unused imports:
+// import Grid from "./components/layout/app/diagram-panel/Grid"; 
+// import Analysis from "./components/layout/app/diagram-panel/Analysis"; 
+// import DiagramTabs from "./components/layout/app/diagram-panel/DiagramTabs";
+
+// ✅ KEEP the only component you are rendering in the diagram area:
 import DiagramPanel from "./components/layout/app/diagram-panel/DiagramPanel";
+
 
 export default function Home() {
   return (
@@ -20,17 +27,8 @@ export default function Home() {
         <meta property="og:url" content="https://fsd-studio.com/" />
         <meta property="og:type" content="website" />
 
-        
-
-        {/* This will define the prefered site version to avoide duplicate content
-            
-            Example:  https://fsd-studio.com/ and https://fsd-studio.com/#about will both show up in results. 
-            
-            canonical defines which link is prefered.
-        */}
-
         {/* <link rel="canonical" href="https://fsd-studio.com/" /> */}
-       
+        
         {/* Don't change */}
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
@@ -40,7 +38,6 @@ export default function Home() {
         <Nav links={["Conversations"]} />
 
         
-
         {/* Grid container that fills remaining space */}
         <div className="grid lg:grid-cols-7 lg:gap-6 flex-grow min-h-0 max-h-full relative">
 
@@ -54,7 +51,7 @@ export default function Home() {
             <DiagramPanel></DiagramPanel>
           </div>
         </div>
-      </DashboardSection>        
+      </DashboardSection> 			
     </>
   );
 }

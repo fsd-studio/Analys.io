@@ -1,3 +1,5 @@
+// Analysis.js
+
 "use client"
 
 import { geminiAnalysis } from "app/api/ai/geminiAPI";
@@ -7,33 +9,36 @@ import Button from "../../../ui/basic/Button";
 import Tooltip from "../../../ui/basic/Tooltip";
 
 function Analysis({
-
+    // New prop received from DiagramTabs
+    onAnalysisComplete
 }) {
     const [loading, setLoading] = useState(false);
     const [response, setResponse] = useState(null);
     const [error, setError] = useState(null);
 
-    const { chatMessages, setEdges, setNodes } = useChat();
+    // Removed setEdges and setNodes from useChat as DiagramTabs handles the data now
+    const { chatMessages } = useChat(); 
 
     const handleAnalyze = async () => {
       setLoading(true);
 
       setTimeout(() => {
-        setResponse({ text: "Mocked API response" });
+        setResponse({ text: "Mocked AI analysis complete." });
 
+        // --- Mocked Diagram Data (remains the same) ---
         const mockedEdges = [
-{ "id": "e1", "source": "n0", "target": "n1" },
-{ "id": "e2", "source": "n0", "target": "n2" },
-{ "id": "e3", "source": "n1", "target": "n7" },
-{ "id": "e4", "source": "n7", "target": "n6" },
-{ "id": "e5", "source": "n7", "target": "n5" },
-{ "id": "e7", "source": "n0", "target": "n3" },
-{ "id": "e8", "source": "n3", "target": "n4" },
-{ "id": "e9", "source": "n2", "target": "n8" },
-{ "id": "e10", "source": "n8", "target": "n9" },
-{ "id": "e11", "source": "n2", "target": "n10" },
-{ "id": "e12", "source": "n2", "target": "n11" },
-{ "id": "e13", "source": "n9", "target": "n12" }
+            { "id": "e1", "source": "n0", "target": "n1" },
+            { "id": "e2", "source": "n0", "target": "n2" },
+            { "id": "e3", "source": "n1", "target": "n7" },
+            { "id": "e4", "source": "n7", "target": "n6" },
+            { "id": "e5", "source": "n7", "target": "n5" },
+            { "id": "e7", "source": "n0", "target": "n3" },
+            { "id": "e8", "source": "n3", "target": "n4" },
+            { "id": "e9", "source": "n2", "target": "n8" },
+            { "id": "e10", "source": "n8", "target": "n9" },
+            { "id": "e11", "source": "n2", "target": "n10" },
+            { "id": "e12", "source": "n2", "target": "n11" },
+            { "id": "e13", "source": "n9", "target": "n12" }
         ];
 
         const mockedNodes = [
@@ -117,9 +122,9 @@ function Analysis({
             "data": { "label": "Love as a Free Decision (Proves reality is 'bigger than' matter and energy)", "person": "primary" }
             }
         ]
+        // ---------------------------------------------
 
-        console.log(mockedEdges)
-
+        // --- Tree Layout Logic (remains the same) ---
         class Tree {
         #children = new Map();
         #parent = null;
@@ -197,7 +202,7 @@ function Analysis({
             let str = "\n";
 
             node.children.forEach((child) => {
-                str +=  `${'--'.repeat(space)}${child.id}-${child.x} mode -> ${child.mod}, shift -> ${child.#shift}${this.#getTreeString(child, space + 2)}`
+                str +=  `${'--'.repeat(space)}${child.id}-${child.x} mode -> ${child.mod}, shift -> ${child.#shift}${this.#getTreeString(child, space + 2)}`
             })
 
             return str;
@@ -259,7 +264,7 @@ function Analysis({
 
             for (let i = 0; i < minLength; i++) {
                 // if left side is bigger than right side
-                const difference =  leftContours[i].x + rightNode.mod + rightNode.shift - (rightContours[i].x + leftNode.mod + leftNode.shift) -1
+                const difference =  leftContours[i].x + rightNode.mod + rightNode.shift - (rightContours[i].x + leftNode.mod + leftNode.shift) -1
                 console.log("diff", difference)
 
 
@@ -323,7 +328,7 @@ function Analysis({
             // If node has children but is not the first child of the parent
             if (node?.children.length > 0 && node.parent != null) {
                 node.mod = Math.abs(node.x - (node.children[0].x + node.children[node.children.length -1].x) / 2) 
-            }   
+            } 
 
             let i = 0
             while (i < index) {
@@ -343,18 +348,18 @@ function Analysis({
         }
 
         function secondPass(node, modSum = 0) {
-          
-          node.x += modSum + node.shift;
-          console.log(node.id, node.mod, modSum, node.x)
-          
-          mockedNodes[Number(node.id.replace(/\D/g, ""))].position = { x: node.x * 300, y: node.y * 200 }
-          
-          node.children.forEach(child => {
-            console.log(node.mod)
-            secondPass(child, modSum + node.mod + node.shift);
-          });
+            
+            node.x += modSum + node.shift;
+            console.log(node.id, node.mod, modSum, node.x)
+            
+            mockedNodes[Number(node.id.replace(/\D/g, ""))].position = { x: node.x * 300, y: node.y * 200 }
+            
+            node.children.forEach(child => {
+                console.log(node.mod)
+                secondPass(child, modSum + node.mod + node.shift);
+            });
         }
-        
+        // ---------------------------------------------
         
         console.log(mockedEdges)
         
@@ -371,14 +376,15 @@ function Analysis({
 
         console.log(root.print())
 
-        setEdges(mockedEdges);
-        setNodes(mockedNodes);
+        // 🎯 Use the prop to create the tab instead of setting state via useChat
+        onAnalysisComplete("Conversation Flowchart", mockedNodes, mockedEdges);
 
         setLoading(false);
       }, 50);
     }
 
     useEffect(() => {
+        // Reset analysis state when chat messages change
         setResponse(null);
         setLoading(false);
         setError(null)
@@ -388,7 +394,7 @@ function Analysis({
     return (
         <>
             {response && (
-                <div className="mt-4 p-4 border border-gray-300 rounded">
+                <div className="mt-4 p-4 border border-gray-300 rounded-b-lg">
                     <h3 className="font-primary text-xl">AI Analysis Result</h3>
                     <pre className="whitespace-pre-wrap">{JSON.stringify(response.text, null, 2)}</pre>
                 </div>
@@ -397,7 +403,7 @@ function Analysis({
             {!response && (
             <div className="flex flex-col gap-2 items-center justify-center h-full">
                 <h2 className="font-primary uppercase text-2xl">Analyze Conversation</h2>
-                <p className="mb-3 w-90 text-center text-sm text-gray-700">Our sophisticated AI will provide you interpret and analyze your conversation, and provide you with a summary.</p>
+                <p className="mb-3 w-90 text-center text-sm text-gray-700">Our sophisticated AI will interpret and analyze your conversation, and provide you with a summary.</p>
 
                 <Tooltip message={loading ? "Analyzing..." : chatMessages.length === 0 ? "No messages to analyze" : "Analyze the current conversation"}>
                     <Button onClick={handleAnalyze} disabled={loading || chatMessages.length === 0} outline size="lg">Analyze</Button>
