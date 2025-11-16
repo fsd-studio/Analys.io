@@ -2,7 +2,7 @@
 
 'use client'; 
 
-import { useState, useCallback } from 'react'; // Added useCallback
+import { useState, useCallback } from 'react';
 import Grid from './Grid'; 
 import Analysis from './Analysis';
 

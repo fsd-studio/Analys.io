@@ -247,6 +247,7 @@ function Analysis({
             node.x += modSum + node.shift;
             
             mockedNodes[Number(node.id.replace(/\D/g, ""))].position = { x: node.x * 300, y: node.y * 200 }
+            mockedNodes[Number(node.id.replace(/\D/g, ""))].origin = [0.5, 0.5]
             
             node.children.forEach(child => {
                 secondPass(child, modSum + node.mod + node.shift);
