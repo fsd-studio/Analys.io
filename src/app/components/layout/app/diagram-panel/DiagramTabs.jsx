@@ -94,12 +94,10 @@ export default function DiagramTabs() {
                 </div>
             )}
 
-            {/* 2. CONTENT AREA */}
             <div className={`rounded-b-3xl flex-grow bg-white w-full h-full ${openTabs.length === 0 ? 'h-full' : 'overflow-auto'}`}>
                 {openTabs.length === 0 ? (
                     <Analysis onAnalysisComplete={addDiagram} /> 
                 ) : activeFlowchartData ? (
-                    // 🔑 CRITICAL: Use the active ID as the key
                     <Grid 
                         key={activeTabId} 
                         data={activeFlowchartData} 

@@ -1,5 +1,3 @@
-// Grid.jsx (Final Corrected Code)
-
 "use client"
 
 import { Background, Controls, MiniMap, Panel, ReactFlow, addEdge, applyEdgeChanges, applyNodeChanges } from "@xyflow/react";
@@ -10,7 +8,6 @@ import Argument from "app/components/ui/diagram/nodes/Argument";
 
 const Grid = ({
     data, 
-    title = "Conversation Flowchart", 
     onDataChange,    
     onAddDiagram     
 }) => {
