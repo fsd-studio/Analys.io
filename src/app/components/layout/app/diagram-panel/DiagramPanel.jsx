@@ -2,7 +2,6 @@
 
 import '@xyflow/react/dist/style.css';
 import DiagramTabs from './DiagramTabs';
-
 import { ReactFlowProvider } from '@xyflow/react'; 
 
 const DiagramPanel = () => {

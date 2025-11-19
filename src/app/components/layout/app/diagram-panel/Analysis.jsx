@@ -1,130 +1,31 @@
-// Analysis.js
-
 "use client"
 
-import { geminiAnalysis } from "app/api/ai/geminiAPI";
 import { useChat } from "context/ChatContext";
 import { useEffect, useState } from "react";
 import Button from "../../../ui/basic/Button";
 import Tooltip from "../../../ui/basic/Tooltip";
+import { generateNodes } from "app/actions/generateNodes";
 
 function Analysis({
-    // New prop received from DiagramTabs
     onAnalysisComplete
 }) {
     const [loading, setLoading] = useState(false);
     const [response, setResponse] = useState(null);
     const [error, setError] = useState(null);
 
-    // Removed setEdges and setNodes from useChat as DiagramTabs handles the data now
     const { chatMessages } = useChat(); 
 
     const handleAnalyze = async () => {
-      setLoading(true);
+        setLoading(true);
 
-      setTimeout(() => {
-        setResponse({ text: "Mocked AI analysis complete." });
+        console.log("first check", chatMessages)
+        
+        const response = await generateNodes(chatMessages)
 
-        // --- Mocked Diagram Data (remains the same) ---
-        const mockedEdges = [
-            { "id": "e1", "source": "n0", "target": "n1" },
-            { "id": "e2", "source": "n0", "target": "n2" },
-            { "id": "e3", "source": "n1", "target": "n7" },
-            { "id": "e4", "source": "n7", "target": "n6" },
-            { "id": "e5", "source": "n7", "target": "n5" },
-            { "id": "e7", "source": "n0", "target": "n3" },
-            { "id": "e8", "source": "n3", "target": "n4" },
-            { "id": "e9", "source": "n2", "target": "n8" },
-            { "id": "e10", "source": "n8", "target": "n9" },
-            { "id": "e11", "source": "n2", "target": "n10" },
-            { "id": "e12", "source": "n2", "target": "n11" },
-            { "id": "e13", "source": "n9", "target": "n12" }
-        ];
+        const mockedEdges = response.initialEdges
 
-        const mockedNodes = [
-            {
-            "id": "n0",
-            "type": "premise",
-            "origin": [0.5, 0.5],
-            "data": { "label": "Jesus's Resurrection: Historical Event vs. Supernatural Claim", "person": "primary" }
-            },
-            
-            {
-            "id": "n1",
-            "type": "argument",
-            "origin": [0.5, 0.5],
-            "data": { "label": "Resurrection Proves Reliability (Trustworthiness)", "person": "primary" }
-            },
-            {
-            "id": "n2",
-            "origin": [0.5, 0.5],
-            "type": "counterargument",
-            "data": { "label": "Disbelief based on Philosophical Presupposition (Naturalism)", "person": "secondary" }
-            },
-            {
-            "id": "n3",
-            "type": "argument",
-            "origin": [0.5, 0.5],
-            "data": { "label": "Historical Evidence (Jewish Worship Change from Sabbath to Sunday)", "person": "primary" }
-            },
-            {
-            "id": "n4",
-            "type": "counterargument",
-            "origin": [0.5, 0.5],
-            "data": { "label": "It proves Christianity existed, not its supernatural claim's validity", "person": "secondary" }
-            },
-            {
-            "id": "n5",
-            "type": "argument",
-            "origin": [0.5, 0.5],
-            "data": { "label": "Ethical Teaching & Death/Resurrection as supporting evidence", "person": "primary" }
-            },
-            {
-            "id": "n6",
-            "type": "counterargument",
-            "origin": [0.5, 0.5],
-            "data": { "label": "Reliance on 'Process of Elimination' for belief in Christ", "person": "secondary" }
-            },
-            {
-            "id": "n7",
-            "type": "argument",
-            "origin": [0.5, 0.5],
-            "data": { "label": "Need to examine historical claims in other religions (e.g., Muhammad)", "person": "primary" }
-            },
-            {
-            "id": "n8",
-            "type": "counterargument",
-            "origin": [0.5, 0.5],
-            "data": { "label": "Rejection of Miracles/Supernatural as 'Irrational' or 'Fantastic'", "person": "secondary" }
-            },
-            {
-            "id": "n9",
-            "type": "argument",
-            "origin": [0.5, 0.5],
-            "data": { "label": "Critique of Naturalism as limiting 'honest history'", "person": "primary" }
-            },
-            {
-            "id": "n10",
-            "type": "counterargument",
-            "origin": [0.5, 0.5],
-            "data": { "label": "Belief is a 'Sociological Phenomenon' (Impact is separate from historical claim)", "person": "secondary" }
-            },
-            {
-            "id": "n11",
-            "type": "counterargument",
-            "origin": [0.5, 0.5],
-            "data": { "label": "Lack of 'feeling' God's love or spiritual experience (Personal Standard)", "person": "secondary" }
-            },
-            {
-            "id": "n12",
-            "type": "argument",
-            "origin": [0.5, 0.5],
-            "data": { "label": "Love as a Free Decision (Proves reality is 'bigger than' matter and energy)", "person": "primary" }
-            }
-        ]
-        // ---------------------------------------------
+        const mockedNodes = response.initialNodes
 
-        // --- Tree Layout Logic (remains the same) ---
         class Tree {
         #children = new Map();
         #parent = null;
@@ -263,14 +164,11 @@ function Analysis({
             const minLength = Math.min(rightContours.length, leftContours.length)
 
             for (let i = 0; i < minLength; i++) {
-                // if left side is bigger than right side
                 const difference =  leftContours[i].x + rightNode.mod + rightNode.shift - (rightContours[i].x + leftNode.mod + leftNode.shift) -1
-                console.log("diff", difference)
 
 
                 if (difference < 0) {
                     rightNode.shift += Math.abs(difference);
-                    console.log("rightnode", rightNode.shift)
                 }
             }
         }
@@ -304,8 +202,6 @@ function Analysis({
             const parentChildren = node.parent ? Array.from(node.parent.children) : [];
             const index = parentChildren.indexOf(node)
 
-            console.log("index of child", index, node.children)
-            
             // If node is first child of parent
             if (parentChildren[0] === node) {
                 
@@ -319,7 +215,6 @@ function Analysis({
                 // If node is not the first child of parent
                 parentChildren.slice(1).forEach((element, index) => {
                     element.x = node.x + index + 1
-                    console.log(node.x, index)
                 });
                 
                 return
@@ -350,18 +245,14 @@ function Analysis({
         function secondPass(node, modSum = 0) {
             
             node.x += modSum + node.shift;
-            console.log(node.id, node.mod, modSum, node.x)
             
             mockedNodes[Number(node.id.replace(/\D/g, ""))].position = { x: node.x * 300, y: node.y * 200 }
+            mockedNodes[Number(node.id.replace(/\D/g, ""))].origin = [0.5, 0.5]
             
             node.children.forEach(child => {
-                console.log(node.mod)
                 secondPass(child, modSum + node.mod + node.shift);
             });
         }
-        // ---------------------------------------------
-        
-        console.log(mockedEdges)
         
         const root = new Tree("n0")
         
@@ -374,13 +265,9 @@ function Analysis({
 
         mockedNodes[0].position = { x: root.x * 300, y: 0 }
 
-        console.log(root.print())
-
-        // 🎯 Use the prop to create the tab instead of setting state via useChat
         onAnalysisComplete("Conversation Flowchart", mockedNodes, mockedEdges);
 
         setLoading(false);
-      }, 50);
     }
 
     useEffect(() => {

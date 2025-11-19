@@ -9,8 +9,6 @@ function Argument({
     }) {
 
     const { setActiveID, activeID } = useChat();
-    console.log("Active ID in Argument:", activeID);
-    console.log("ID in Argument:", id);
 
 
     const styles = {
