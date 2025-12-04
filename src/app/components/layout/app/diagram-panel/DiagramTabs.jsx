@@ -1,6 +1,6 @@
 'use client'; 
 
-import { useState, useCallback } from 'react'; 
+import { useState, useCallback, useEffect } from 'react'; 
 import Grid from './Grid'; 
 import Analysis from './Analysis';
 
@@ -16,7 +16,16 @@ export default function DiagramTabs() {
     const isAnalysisActive = activeTabId?.startsWith('analysis-');
     
     const activeFlowchartData = !isAnalysisActive ? activeTab?.flowchartData : null;
-    const analyzedNodeData = isAnalysisActive ? activeTab?.nodeData : null;
+    const { nodeData: analyzedNodeData, fallacyData } = isAnalysisActive ? activeTab : {};
+
+    const [selectedFallacy, setSelectedFallacy] = useState(null); 
+    useEffect(() => {
+        setSelectedFallacy(null);
+    }, [activeTabId]); 
+
+    const handleFallacyClick = (fallacy) => {
+        setSelectedFallacy(selectedFallacy?.name === fallacy.name ? null : fallacy);
+    };
 
     const handleTabClick = (id) => {
         setActiveTabId(id);
@@ -74,6 +83,7 @@ export default function DiagramTabs() {
             id: newId,
             label: `Anl.: ${node.data.label.substring(0, 15)}...`,
             nodeData: node, 
+            fallacyData: node.fallacies || [],
         };
 
         setOpenTabs(prevTabs => [...prevTabs, analysisTab]);
@@ -143,15 +153,56 @@ export default function DiagramTabs() {
                 
                 : isAnalysisActive && analyzedNodeData ? (
                     <div className="p-4 w-full h-full flex flex-col overflow-auto pt-10">
-                        <h2 className="text-xl font-semibold border-b pb-2 mb-4">Node Context: **{analyzedNodeData.data.label}**</h2>
+                        <h2 className="text-xl font-semibold border-b pb-2 mb-4">Node Context: {analyzedNodeData.data.label}</h2>
                         
                         <div className="flex-grow">
-                            <p className="text-gray-700">**ID:** {analyzedNodeData.id}</p>
-                            <p className="text-gray-700 mt-2">**Type:** {analyzedNodeData.type}</p>
-                            <p className="text-gray-700 mt-2">**Data Details:**</p>
+                            <p className="text-gray-700">Speaker: 
+                                {analyzedNodeData.data.person === 'primary' 
+                                    ? ' Person 1' 
+                                    : analyzedNodeData.data.person === 'secondary' 
+                                        ? ' Person 2' 
+                                        : ' Unknown'
+                                }</p>
+                            <p className="text-gray-700 mt-2">Type: {analyzedNodeData.type}</p>
+                            <p className="text-gray-700 mt-2">Data Details:</p>
                             <blockquote className="border-l-4 border-green-500 pl-3 italic mt-1 bg-green-50 p-2 rounded">
-                                {analyzedNodeData.data.description || analyzedNodeData.data.content || "No detailed content available for this node."}
+                                {analyzedNodeData.data.content || analyzedNodeData.data.description || "No detailed content available for this node."}
                             </blockquote>
+
+                            {/* Fallacies Rendering Section */}
+                            {fallacyData && (
+                                <div className="mt-6 border-t pt-4">
+                                    <h3 className="text-lg font-semibold mb-2">Logical Fallacies</h3>
+                                    <div className="flex flex-wrap gap-2">
+                                        {fallacyData.map((fallacy, index) => (
+                                            <div 
+                                                key={index} 
+                                                onClick={() => handleFallacyClick(fallacy)}
+                                                className={`
+                                                    bg-red-100 text-red-800 border-2 border-red-500 rounded-lg 
+                                                    px-4 py-2 text-sm font-medium cursor-pointer hover:bg-red-200 
+                                                    ${selectedFallacy?.name === fallacy.name ? 'ring-2 ring-red-500 ring-offset-1' : ''}
+                                                `}
+                                            >
+                                                {fallacy.name}
+                                            </div>
+                                        ))}
+                                        {fallacyData.length === 0 && (
+                                            <p className="text-gray-500 italic">No major logical fallacies detected.</p>
+                                        )}
+                                    </div>
+            
+                            {/* Fallacy Explanation Display */}
+                            {selectedFallacy && (
+                                <div className="mt-4 p-3 bg-red-50 border-l-4 border-red-500 rounded-md">
+                                    <h4 className="font-semibold text-red-800">{selectedFallacy.name} Explanation:</h4>
+                                    <p className="text-red-700 text-sm mt-1">{selectedFallacy.explanation}</p>
+                                    
+                                </div>
+                            )}
+                            
+                        </div>
+                    )}
                         </div>
                     </div>
 

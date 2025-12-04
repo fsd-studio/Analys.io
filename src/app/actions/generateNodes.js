@@ -68,6 +68,10 @@ export async function generateNodes(
                     "description": "A brief summary of the statement.",
                     "type": "string"
                   },
+                  "content": {
+                    "description": "The full, original message text from the transcript (corresponding to MessageID).",
+                    "type": "string"
+                  },
                   "person": {
                     "description": "The speaker category.",
                     "type": "string",
@@ -75,9 +79,28 @@ export async function generateNodes(
                   }
                 },
                 "required": ["label", "person"]
-              }
+              },
+              "fallacies": {
+                "description": "A list of logical fallacies identified in this specific statement.",
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "description": "The common name of the logical fallacy (e.g., 'Straw Man', 'Ad Hominem').",
+                            "type": "string"
+                        },
+                        "explanation": {
+                            "description": "A brief explanation of why this statement constitutes that specific fallacy.",
+                            "type": "string"
+                        }
+                    },
+                    "required": ["name", "explanation"]
+                },
+                "default": [] // It's an optional field
+            }
             },
-            "required": ["MessageID", "id", "type", "data"]
+            "required": ["MessageID", "id", "type", "data", "fallacies"]
           }
         },
         "initialEdges": {
@@ -118,10 +141,11 @@ export async function generateNodes(
          • id: A sequential graph identifier, starting at n0 (e.g., n0, n1, n2).
       3. Logical Segmentation: Identify and segment only the substantive premises, arguments, and counterarguments that logically advance the debate. Exclude conversational filler or simple procedural questions (e.g., "Okay, why?", "What do you think?").
       4. Root Nodes: The first node (n0) must have "type": "premise". If there are multiples premises make a root node for each of them. NEVER have duplicate node id's
-      5. Data Fields: Accurately summarize the claim in the data.label field and identify the speaker in data.person as "primary" or "secondary" based on the transcript line's speaker category.
+      5. Data Fields: Accurately summarize the claim in the data.label field, copy the full original text of the message into the data.content field, and identify the speaker in data.person as "primary" or "secondary" based on the transcript line's speaker category.
       6. Edge Logic (DAG): Create initialEdges using the sequential id (e.g., n0 → n1, n1 → n2) to connect arguments logically.
       7. Present edges in a logical fashion. Arguments are made for premises, therefore they should be attached to them. Counterarguments must be attached to a previous counterargument or a normal argument.
-    `;
+      8. Fallacy Detection: For every node, carefully analyze the claim for any logical fallacies. If one or more fallacies are found, populate the 'fallacies' array with the 'name' and a concise 'explanation' as defined in the schema. If no major fallacies are detected, the 'fallacies' array must be an empty list [].
+      `;
 
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
