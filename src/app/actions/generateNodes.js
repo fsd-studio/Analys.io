@@ -97,7 +97,7 @@ export async function generateNodes(
                     },
                     "required": ["name", "explanation"]
                 },
-                "default": [] // It's an optional field
+                "default": []
             }
             },
             "required": ["MessageID", "id", "type", "data", "fallacies"]
