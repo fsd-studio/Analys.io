@@ -265,6 +265,8 @@ function Analysis({
 
         mockedNodes[0].position = { x: root.x * 300, y: 0 }
 
+        console.log(mockedNodes)
+
         onAnalysisComplete("Conversation Flowchart", mockedNodes, mockedEdges);
 
         setLoading(false);

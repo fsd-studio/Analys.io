@@ -6,14 +6,29 @@ import { useChat } from "context/ChatContext";
 import { useEffect, useRef } from "react";
 import Settings from "./Settings";
 import UploadZone from "./UploadZone";
+import { useReactFlow } from "@xyflow/react";
 
 function Conversation() {
   const targetRef = useRef({});
-  const { chatMessages, activeID, setActiveID } = useChat();
+  const { chatMessages, activeID, reactFlowInstance } = useChat();
 
   useEffect(() => {
-    targetRef.current[activeID]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    let ID = activeID
+
+    let nodes;
+    let node;
+
+    
+    if (ID?.includes("n") && typeof reactFlowInstance.getNodes === "function") {
+      nodes = reactFlowInstance.getNodes()
+      node = nodes.find((node) => node.id == ID)
+      
+      ID = node["MessageID"]
+    }
+
+    targetRef.current[ID]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     console.log("Scrolling to message ID:", targetRef.current);
+    console.log("Scrolling to message ID:", ID);
   }, [activeID]);
 
   return (
