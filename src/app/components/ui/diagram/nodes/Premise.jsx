@@ -1,27 +1,16 @@
 import { Handle, Position } from "@xyflow/react";
+import Wrapper from "./Wrapper";
 
 function Premise({ 
-        data
+        data, 
+        id
     }) {
 
-    const styles = {
-        primary: "border-blue-700 bg-blue-100",
-        secondary: "border-green-700 bg-green-100",
-    }
-    
-    const titleStyles = {
-        primary: "text-blue-900",
-        secondary: "text-green-900",
-    }
-
     return (
-        <>
-            <div className={`${styles[data.person]} w-60 p-3 text-center flex items-center justify-center border-2 rounded-full`}>
-                <h2 className={`${titleStyles[data.person]} text-xl font-primary uppercase font-bold`}>{data.label}</h2>
-                <Handle type="source" position={Position.Bottom} />
-                <Handle type="target" position={Position.Top} />
-            </div>
-        </>
+        <Wrapper titleStyling="p-2 font-primary uppercase font-bold" title={data.label} data={data} styling={`w-60 p-3 text-center flex items-center justify-center border-2 rounded-full`} id={id}>
+            <Handle type="source" position={Position.Bottom} />
+            <Handle type="target" position={Position.Top} />
+        </Wrapper>
     );
 }
 

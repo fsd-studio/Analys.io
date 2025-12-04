@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 
 import "./globals.css";
+import { ReactFlowProvider } from "@xyflow/react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,9 +39,11 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${fontPrimary.variable} ${fontPrimaryLight.variable} antialiased`}
       >
-        <ChatProvider>
-          {children}
-        </ChatProvider>
+        <ReactFlowProvider>
+          <ChatProvider>
+            {children}
+          </ChatProvider>
+        </ReactFlowProvider>
       </body>
     </html>
   );
