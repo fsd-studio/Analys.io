@@ -153,7 +153,7 @@ export default function DiagramTabs() {
                 
                 : isAnalysisActive && analyzedNodeData ? (
                     <div className="p-4 w-full h-full flex flex-col overflow-auto pt-10">
-                        <h2 className="text-xl font-semibold border-b pb-2 mb-4">Node Context: {analyzedNodeData.data.label}</h2>
+                        <h2 className="text-xl font-semibold border-b pb-2 mb-4">AI Summary: {analyzedNodeData.data.label}</h2>
                         
                         <div className="flex-grow">
                             <p className="text-gray-700">Speaker: 
@@ -164,7 +164,7 @@ export default function DiagramTabs() {
                                         : ' Unknown'
                                 }</p>
                             <p className="text-gray-700 mt-2">Type: {analyzedNodeData.type}</p>
-                            <p className="text-gray-700 mt-2">Data Details:</p>
+                            <p className="text-gray-700 mt-2">Original Message:</p>
                             <blockquote className="border-l-4 border-green-500 pl-3 italic mt-1 bg-green-50 p-2 rounded">
                                 {analyzedNodeData.data.content || analyzedNodeData.data.description || "No detailed content available for this node."}
                             </blockquote>
