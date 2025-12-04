@@ -1,0 +1,39 @@
+{
+    "type": "OBJECT",
+    "properties": {
+        "flowchart": {
+            "type": "OBJECT",
+            "properties": {
+                "title": { "type": "STRING" },
+                "nodes": {
+                    "type": "ARRAY",
+                    "description": "The nodes of the decision tree, representing arguments and links.",
+                    "items": {
+                        "type": "OBJECT",
+                        "properties": {
+                            "id": { "type": "INT", "description": "Unique ID for each node. ID should correspond to the ID of the most relevant chat message." },
+                            "label": { "type": "STRING", "description": "A concise summary of the argument or point." },
+                            "type": { "type": "STRING", "enum": ["premise", "argument", "counterargument"] },
+                            "children": { "type": "ARRAY", "items": { "type": "INT" }, "description": "IDs of child nodes this node leads to." }
+                        },
+                        "required": ["id", "label", "children", "type"]
+                    }
+                }
+            },
+            "required": ["title", "nodes"]
+        }
+    },
+    "required": ["flowchart"]
+}
+
+list = ["jimi", 1, 2, 3, "sen"]
+list[0]
+
+object = {
+    "names": ["jimi, sen"],
+    "hours": [1,2,3]
+}
+
+{
+    flowchart:
+}
