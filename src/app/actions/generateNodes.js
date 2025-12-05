@@ -50,9 +50,9 @@ export async function generateNodes(transcriptObject) {
                 type: "object",
                 properties: {
                   label: { type: "string" },
-                  "content": {
-                    "description": "The full, original message text from the transcript (corresponding to MessageID).",
-                    "type": "string"
+                  content: {
+                    description: "The full, original message text from the transcript (corresponding to MessageID).",
+                    type: "string"
                   },
                   person: {
                     type: "string",
@@ -62,11 +62,6 @@ export async function generateNodes(transcriptObject) {
                 required: ["label", "person"],
                 
               },
-              
-            },
-            required: ["MessageID", "id", "type", "data"],
-          },
-        },
               "fallacies": {
                 "description": "A list of logical fallacies identified in this specific statement.",
                 "type": "array",
@@ -86,6 +81,11 @@ export async function generateNodes(transcriptObject) {
                 },
                 "default": [] // It's an optional field
             },
+            },
+            required: ["MessageID", "id", "type", "data", "fallacies"],
+          },
+        },
+              
         initialEdges: {
           type: "array",
           items: {
@@ -99,7 +99,7 @@ export async function generateNodes(transcriptObject) {
           },
         },
       },
-      required: ["title", "initialNodes", "initialEdges", "fallacies"],
+      required: ["title", "initialNodes", "initialEdges"],
     };
 
     /**
@@ -148,8 +148,9 @@ CORE EXTRACTION RULES
 9. No Forced Chains:
    - Never create linear chains by default.
    - Attachment must be semantically justified.
-10. Fallacy Detection: copy the full original text of the message into the data.content field.
-   - For every node, carefully analyze the claim for any logical fallacies. If one or more fallacies are found, populate the 'fallacies' array with the 'name' and a concise 'explanation' as defined in the schema. If no major fallacies are detected, the 'fallacies' array must be an empty list [].
+10. Data Fields: Copy the full original text of the message into the data.content field.
+11. Fallacy Detection: 
+   - For every data.content field, carefully analyze the claim for any logical fallacies. If one or more fallacies are found, populate the 'fallacies' array with the 'name' and a concise 'explanation' as defined in the schema. If no major fallacies are detected, the 'fallacies' array must be an empty list [].
       
 –––––––––––––––––––––––––
 EDGE CONSTRAINTS
