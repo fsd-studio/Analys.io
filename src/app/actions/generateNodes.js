@@ -1,85 +1,72 @@
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: "AIzaSyAFsCpDedNK0nHBY9qFHBzTSulbSLnauNw" });
+/**
+ * Initialize Gemini client
+ * Store your API key safely in an environment variable:
+ * process.env.GEMINI_API_KEY
+ */
+const ai = new GoogleGenAI({
+  apiKey: "AIzaSyAeGA4iq80Uslqoyht46ppoCxleXSi7_Sk",
+});
 
-export async function generateNodes(
-    transcriptObject
-) {
-
+/**
+ * Generate a structured argument graph from a transcript
+ */
+export async function generateNodes(transcriptObject) {
   try {
-    const transcriptString = transcriptObject.map((line) => {
-      const speakerCategory = line.primary ? "primary" : "secondary";
-      return (`${line.id} (${speakerCategory}): ${line.content}`); 
-    })
-    .join('\n');
+    /**
+     * Convert transcript to structured text input
+     */
+    const transcriptString = transcriptObject
+      .map((line) => {
+        const person = line.primary ? "primary" : "secondary";
+        return `${line.id} (${person}): ${line.content}`;
+      })
+      .join("\n");
 
-    const apiContents = [
-      {
-        role: "user",
-        parts: [
-          {
-            text: `Please analyze the following transcript and generate the argument map structure based strictly on the provided JSON Schema.
-            The output MUST be a JSON object, with no introductory text, markdown fences (like \`\`\`json), or conversational filler.
-
-            Transcript to analyze:
-            ${transcriptString}`,
-          },
-        ],
-      },
-    ];
-
+    /**
+     * JSON schema enforcing branching argument structure
+     */
     const debateGraphSchema = {
-      "$schema": "[https://json-schema.org/draft/2020-12/schema](https://json-schema.org/draft/2020-12/schema)",
-      "$id": "[https://example.com/schemas/debate-graph.json](https://example.com/schemas/debate-graph.json)",
-      "title": "Debate Graph (Flattened)",
-      "description": "A structured representation of a debate or discussion, flattened for robust Gemini API output.",
-      "type": "object",
-      "properties": {
-        "title": {
-          "description": "A concise, descriptive title for the debate.",
-          "type": "string"
-        },
-        "initialNodes": {
-          "description": "A list of all statements (nodes) in the debate.",
-          "type": "array",
-          "items": {
-            "title": "Debate Node",
-            "description": "Represents a single statement or point in the debate graph.",
-            "type": "object",
-            "properties": {
-              "MessageID": {
-                "description": "MessageID: A message identifier, which references the original message given in the transript (m0, m1, m2, ...).",
-                "type": "string"
+      $schema: "https://json-schema.org/draft/2020-12/schema",
+      $id: "https://example.com/schemas/debate-graph.json",
+      title: "Debate Graph",
+      description: "Structured argument map with correct parent targeting",
+      type: "object",
+      properties: {
+        title: { type: "string" },
+        initialNodes: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              MessageID: { type: "string" },
+              id: { type: "string" },
+              type: {
+                type: "string",
+                enum: ["premise", "argument", "counterargument"],
               },
-              "id": {
-                "description": "Sequential graph ID used for linking (e.g., 'n0', 'n1').",
-                "type": "string"
-              },
-              "type": {
-                "description": "The logical type of the statement.",
-                "type": "string",
-                "enum": ["premise", "argument", "counterargument"]
-              },
-              "data": {
-                "description": "Contains the content and metadata of the node.",
-                "type": "object",
-                "properties": {
-                  "label": {
-                    "description": "A brief summary of the statement.",
-                    "type": "string"
-                  },
+              data: {
+                type: "object",
+                properties: {
+                  label: { type: "string" },
                   "content": {
                     "description": "The full, original message text from the transcript (corresponding to MessageID).",
                     "type": "string"
                   },
-                  "person": {
-                    "description": "The speaker category.",
-                    "type": "string",
-                    "enum": ["primary", "secondary"]
-                  }
+                  person: {
+                    type: "string",
+                    enum: ["primary", "secondary"],
+                  },
                 },
-                "required": ["label", "person"]
+                required: ["label", "person"],
+                
               },
+              
+            },
+            required: ["MessageID", "id", "type", "data"],
+          },
+        },
               "fallacies": {
                 "description": "A list of logical fallacies identified in this specific statement.",
                 "type": "array",
@@ -97,56 +84,103 @@ export async function generateNodes(
                     },
                     "required": ["name", "explanation"]
                 },
-                "default": []
-            }
+                "default": [] // It's an optional field
             },
-            "required": ["MessageID", "id", "type", "data", "fallacies"]
-          }
+        initialEdges: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              id: { type: "string" },
+              source: { type: "string" },
+              target: { type: "string" },
+            },
+            required: ["id", "source", "target"],
+          },
         },
-        "initialEdges": {
-          "description": "A list of connections (edges) between the debate nodes.",
-          "type": "array",
-          "items": {
-            "title": "Debate Edge",
-            "description": "Represents a directed link from one debate node to another.",
-            "type": "object",
-            "properties": {
-              "id": {
-                "description": "Unique identifier for the edge (e.g., 'e1', 'e2').",
-                "type": "string"
-              },
-              "source": {
-                "description": "The id of the statement this edge originates from.",
-                "type": "string"
-              },
-              "target": {
-                "description": "The id of the statement this edge points to.",
-                "type": "string"
-              }
-            },
-            "required": ["id", "source", "target"]
-          }
-        }
       },
-      "required": ["title", "initialNodes", "initialEdges"]
+      required: ["title", "initialNodes", "initialEdges", "fallacies"],
     };
 
+    /**
+     * SYSTEM INSTRUCTIONS
+     * These rules FORCE correct tree-like structure
+     */
     const systemInstructions = `
-      You are an expert Argument Map Generator. Your task is to analyze a conversation transcript and output a structured JSON argument map representing the logical flow of substantive claims only.
+You are an expert argument map generator.
+Your task is to analyze a debate transcript and produce a structured JSON argument graph.
+The output MUST strictly follow the provided JSON schema.
+Do NOT output markdown, commentary, or explanations.
+–––––––––––––––––––––––––
+CORE EXTRACTION RULES
+–––––––––––––––––––––––––
+1. Node Types:
+   - Premises introduce the main claim(s).
+   - Arguments support or oppose a premise or another argument.
+   - Counterarguments directly refute a specific argument or counterargument.
+2. Root Rule:
+   - All premises must be root-level nodes.
+   - The first premise must be n0.
+3. Premise Children Rule (CRITICAL):
+   - Any statement that SUPPORTS or OPPOSES the MAIN PREMISE
+     must attach DIRECTLY to the premise, regardless of where
+     it appears in the transcript.
+4. Argument Targeting Rule:
+   - ONLY attach a statement to another argument if it explicitly
+     replies to, refutes, qualifies, or corrects that exact argument.
+   - Do NOT attach nodes based on chronological order.
+5. Counterargument Rule:
+   - A counterargument must attach to the specific argument it counters.
+   - A counterargument to a counterargument must attach to that counterargument.
+6. Single-Parent Rule (MANDATORY):
+   - EACH node may have AT MOST ONE parent edge.
+   - A node must NEVER attach to multiple parents.
+   - If a statement could plausibly respond to more than one prior node,
+     you MUST choose the strongest and most direct semantic target.
+   - Do NOT duplicate nodes to attach them to multiple parents.
+7. Agreement Rule:
+   - If a message begins with agreement ("I agree", "True", etc.)
+     but introduces a new claim,
+     ignore the agreement portion and use ONLY the new claim.
+8. Repetition Rule:
+   - If a message semantically repeats an earlier claim without adding
+     new substance, DO NOT create a new node.
+9. No Forced Chains:
+   - Never create linear chains by default.
+   - Attachment must be semantically justified.
+10. Fallacy Detection: copy the full original text of the message into the data.content field.
+   - For every node, carefully analyze the claim for any logical fallacies. If one or more fallacies are found, populate the 'fallacies' array with the 'name' and a concise 'explanation' as defined in the schema. If no major fallacies are detected, the 'fallacies' array must be an empty list [].
       
-      Conversion Rules:
-      1. Strict JSON Format: The output must strictly follow the provided JSON Schema. DO NOT output anything besides the final JSON object.
-      2. ID Structure: Every node object must contain two primary ID fields:
-         • MessageID: A message identifier, which references the original message given in the transcript (e.g., m0, m1, m2).
-         • id: A sequential graph identifier, starting at n0 (e.g., n0, n1, n2).
-      3. Logical Segmentation: Identify and segment only the substantive premises, arguments, and counterarguments that logically advance the debate. Exclude conversational filler or simple procedural questions (e.g., "Okay, why?", "What do you think?").
-      4. Root Nodes: The first node (n0) must have "type": "premise". If there are multiples premises make a root node for each of them. NEVER have duplicate node id's
-      5. Data Fields: Accurately summarize the claim in the data.label field, copy the full original text of the message into the data.content field, and identify the speaker in data.person as "primary" or "secondary" based on the transcript line's speaker category.
-      6. Edge Logic (DAG): Create initialEdges using the sequential id (e.g., n0 → n1, n1 → n2) to connect arguments logically.
-      7. Present edges in a logical fashion. Arguments are made for premises, therefore they should be attached to them. Counterarguments must be attached to a previous counterargument or a normal argument.
-      8. Fallacy Detection: For every node, carefully analyze the claim for any logical fallacies. If one or more fallacies are found, populate the 'fallacies' array with the 'name' and a concise 'explanation' as defined in the schema. If no major fallacies are detected, the 'fallacies' array must be an empty list [].
-      `;
+–––––––––––––––––––––––––
+EDGE CONSTRAINTS
+–––––––––––––––––––––––––
+- The graph must be a DAG.
+- No cycles.
+- Each node has zero or one parent.
+- Multiple siblings under a premise are expected.
+`;
 
+    /**
+     * User content
+     */
+    const apiContents = [
+      {
+        role: "user",
+        parts: [
+          {
+            text: `
+Analyze the following transcript and generate the argument map.
+TRANSCRIPT:
+${transcriptString}
+`,
+          },
+        ],
+      },
+    ];
+
+    /**
+     * Gemini API call
+     */
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       contents: apiContents,
@@ -157,26 +191,21 @@ export async function generateNodes(
       },
     });
 
-    const jsonString = response.text;
-    
-    const jsonMatch = jsonString.match(/\{[\s\S]*\}/m);
-
-    if (!jsonMatch) {
-      console.error("Gemini API error: Response did not contain a parsable JSON object.");
-      return { error: "Gemini response was not a parsable JSON object." };
+    /**
+     * Defensive parsing
+     */
+    let parsed;
+    try {
+      parsed = JSON.parse(response.text);
+    } catch (err) {
+      console.error("Invalid JSON returned:", response.text);
+      return { error: "Model returned invalid JSON." };
     }
 
-    const cleanedJsonString = jsonMatch[0];
-    const parsedJson = JSON.parse(cleanedJsonString);
-
-    console.log("Gemini API Raw Response:", response);
-    console.log("Parsed Argument Map:", parsedJson);
-
-    return parsedJson;
+    return parsed;
 
   } catch (error) {
-    console.error("Gemini API error:", error);
-
-    return { error: `Gemini API call failed: ${error.message}` };
+    console.error("Gemini API failure:", error);
+    return { error: error.message };
   }
 }
